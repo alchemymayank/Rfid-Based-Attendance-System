@@ -52,7 +52,12 @@ class NfcReaderActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        setupForegroundDispatch(this, nfcAdapter)
+        if (nfcAdapter!=null){
+            setupForegroundDispatch(this, nfcAdapter)
+        }else{
+            showLogDebug(TAG, "Nfc Adapter is null")
+        }
+
     }
 
     fun setupForegroundDispatch(activity: Activity, adapter: NfcAdapter?) {
@@ -163,32 +168,33 @@ class NfcReaderActivity : AppCompatActivity() {
         showLogDebug(TAG, "Write Nfc Tag Button Clicked")
         val tag = inputTag?.text.toString().trim({ it <= ' ' })
         writeNfcTag(tag)
-
     }
 
     private fun writeNfcTag(text: String) {
         val intent = intent
         val tag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
-        val ndef = Ndef.get(tag)
-        if (ndef != null) {
-            try {
-                ndef.connect()
-                val mimeRecord = createRecord(text)//NdefRecord.createMime("text/plain", text.getBytes(Charset.forName("US-ASCII")));
-                ndef.writeNdefMessage(NdefMessage(mimeRecord))
-                ndef.close()
-                showLogDebug(TAG, "Write Nfc Id successfully")
-            } catch (e: IOException) {
-                showLogDebug(TAG, "IOException $e")
-                Toast.makeText(this, "Attach Id card and try again!", Toast.LENGTH_SHORT).show()
-                e.printStackTrace()
-            } catch (e: FormatException) {
-                showLogDebug(TAG, "Format Exception $e")
-                e.printStackTrace()
+        showLogDebug(TAG,"Read tag : $tag")
+        if (tag!= null){
+            val ndef = Ndef.get(tag)
+            if (ndef != null) {
+                try {
+                    ndef.connect()
+                    val mimeRecord = createRecord(text)//NdefRecord.createMime("text/plain", text.getBytes(Charset.forName("US-ASCII")));
+                    ndef.writeNdefMessage(NdefMessage(mimeRecord))
+                    ndef.close()
+                    showLogDebug(TAG, "Write Nfc Id successfully")
+                } catch (e: IOException) {
+                    showLogDebug(TAG, "IOException $e")
+                    e.printStackTrace()
+                } catch (e: FormatException) {
+                    showLogDebug(TAG, "Format Exception $e")
+                    e.printStackTrace()
+                }
             }
-
-        } else {
-            showLogDebug(TAG, "Ndef is null")
+        }else {
+            Toast.makeText(this, "Tag is null", Toast.LENGTH_SHORT).show()
         }
+
     }
 
     @Throws(UnsupportedEncodingException::class)
