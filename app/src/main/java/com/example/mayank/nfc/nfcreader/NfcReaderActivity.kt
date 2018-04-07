@@ -57,7 +57,13 @@ class NfcReaderActivity : AppCompatActivity() {
         }else{
             showLogDebug(TAG, "Nfc Adapter is null")
         }
+    }
 
+    override fun onPause() {
+        super.onPause()
+        if (nfcAdapter!= null){
+            nfcAdapter.disableForegroundDispatch(this)
+        }
     }
 
     fun setupForegroundDispatch(activity: Activity, adapter: NfcAdapter?) {
