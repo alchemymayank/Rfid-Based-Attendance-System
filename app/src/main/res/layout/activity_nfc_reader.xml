@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:id="@+id/fragment_container"
     tools:context="com.example.mayank.nfc.nfcreader.NfcReaderActivity">
 
     <LinearLayout
@@ -68,6 +69,14 @@
                     android:text="Create Nfc Id"
                     android:layout_marginTop="10dp"
                     android:onClick="writeNfcTag"
+                    tools:ignore="OnClick" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/check_button"
+                    android:text="CheckData"
+                    android:onClick="checkData"
                     tools:ignore="OnClick" />
 
             </LinearLayout>

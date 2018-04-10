@@ -4,24 +4,31 @@ import android.app.Activity
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
 import android.nfc.*
 import android.nfc.tech.Ndef
 import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.example.mayank.nfc.Constants.showLogDebug
+import com.example.mayank.nfc.NfcApplication
 import com.example.mayank.nfc.R
+import com.example.mayank.nfc.roomdatabase.Converters
+import com.example.mayank.nfc.roomdatabase.NfcStudentAttendance
 import java.io.IOException
 import java.io.UnsupportedEncodingException
 import java.util.*
 import kotlin.experimental.and
 
 class NfcReaderActivity : AppCompatActivity() {
+
+
 
     var nfcTagTextView: TextView? = null
     internal lateinit var nfcAdapter: NfcAdapter
@@ -54,8 +61,12 @@ class NfcReaderActivity : AppCompatActivity() {
         super.onResume()
         if (nfcAdapter!=null){
             setupForegroundDispatch(this, nfcAdapter)
-        }else{
-            showLogDebug(TAG, "Nfc Adapter is null")
+        }
+        val intent = intent
+        if (intent.action.equals(NfcAdapter.ACTION_TAG_DISCOVERED)){
+            showLogDebug(TAG, "Inside intent action equal")
+            ndefReader(intent)
+
         }
     }
 
@@ -90,6 +101,7 @@ class NfcReaderActivity : AppCompatActivity() {
     }
 
     override fun onNewIntent(intent: Intent) {
+        showLogDebug(TAG, "On new intent called")
         ndefReader(intent)
     }
 
@@ -158,8 +170,25 @@ class NfcReaderActivity : AppCompatActivity() {
                 nfcTagTextView?.text = "NFC Id : $tagId"
                 showLogDebug(TAG, "Content : $tagId")
 
+                saveData(tagId)
+
             }
         }
+    }
+
+    private fun saveData(tagId: String) {
+        val nfcAttendance = NfcStudentAttendance()
+        nfcAttendance.nfcStudentId = tagId
+        nfcAttendance.subject = "Maths"
+        nfcAttendance.facultyName = "Madam Hai"
+        nfcAttendance.trackTime = Converters.dateToTimestamp(Calendar.getInstance().time)
+        try {
+            NfcApplication.database.nfcStudentAttendanceDao().insert(nfcAttendance)
+            showLogDebug(TAG, "Attendance save to database successfully")
+        }catch (e : Exception){
+            showLogDebug(TAG, "Error $e")
+        }
+
     }
 
 
@@ -174,6 +203,7 @@ class NfcReaderActivity : AppCompatActivity() {
         showLogDebug(TAG, "Write Nfc Tag Button Clicked")
         val tag = inputTag?.text.toString().trim({ it <= ' ' })
         writeNfcTag(tag)
+
     }
 
     private fun writeNfcTag(text: String) {
@@ -221,5 +251,21 @@ class NfcReaderActivity : AppCompatActivity() {
 
         return NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, ByteArray(0), payload)
     }
+
+    fun checkData(view: View){
+        showLogDebug(TAG, "Check data button clicked")
+        val list = NfcApplication.database.nfcStudentAttendanceDao().getAllLocation()
+        if (list!= null){
+            for(data in list){
+                showLogDebug(TAG, "Student Id : ${data.nfcStudentId}")
+                showLogDebug(TAG, "Subject Name : ${data.subject}")
+                showLogDebug(TAG, "Faculty Name : ${data.facultyName}")
+                showLogDebug(TAG, "Track Time : ${Converters.fromTimestamp(data.trackTime)}")
+            }
+        }else{
+            showLogDebug(TAG, "Room database list is null")
+        }
+    }
+
 
 }
