@@ -18,8 +18,6 @@ import java.util.*
  */
 class AttendanceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    val context : Context? = null
-
     fun bindView(attendanceViewModel : NfcStudentAttendance){
         val textViewStudentId = itemView.findViewById<TextView>(R.id.text_view_student_id) as TextView
         val textViewSubject = itemView.findViewById<TextView>(R.id.text_view_subject) as TextView
