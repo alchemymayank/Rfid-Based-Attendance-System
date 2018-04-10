@@ -21,6 +21,7 @@ import com.example.mayank.nfc.NfcApplication
 import com.example.mayank.nfc.R
 import com.example.mayank.nfc.roomdatabase.Converters
 import com.example.mayank.nfc.roomdatabase.NfcStudentAttendance
+import com.example.mayank.nfc.viewattendance.ShowAttendance
 import java.io.IOException
 import java.io.UnsupportedEncodingException
 import java.util.*
@@ -254,17 +255,19 @@ class NfcReaderActivity : AppCompatActivity() {
 
     fun checkData(view: View){
         showLogDebug(TAG, "Check data button clicked")
-        val list = NfcApplication.database.nfcStudentAttendanceDao().getAllLocation()
-        if (list!= null){
-            for(data in list){
-                showLogDebug(TAG, "Student Id : ${data.nfcStudentId}")
-                showLogDebug(TAG, "Subject Name : ${data.subject}")
-                showLogDebug(TAG, "Faculty Name : ${data.facultyName}")
-                showLogDebug(TAG, "Track Time : ${Converters.fromTimestamp(data.trackTime)}")
-            }
-        }else{
-            showLogDebug(TAG, "Room database list is null")
-        }
+//        val list = NfcApplication.database.nfcStudentAttendanceDao().getAllAttendance()
+//        if (list!= null){
+//            for(data in list){
+//                showLogDebug(TAG, "Student Id : ${data.nfcStudentId}")
+//                showLogDebug(TAG, "Subject Name : ${data.subject}")
+//                showLogDebug(TAG, "Faculty Name : ${data.facultyName}")
+//                showLogDebug(TAG, "Track Time : ${Converters.fromTimestamp(data.trackTime)}")
+//            }
+//        }else{
+//            showLogDebug(TAG, "Room database list is null")
+//        }
+        val intent = Intent(this, ShowAttendance::class.java)
+        startActivity(intent)
     }
 
 

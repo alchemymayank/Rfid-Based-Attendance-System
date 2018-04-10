@@ -10,14 +10,14 @@ import com.example.mayank.nfc.roomdatabase.NfcStudentAttendance
 interface NfcStudentAttendanceDao {
 
     @Insert
-    fun insert(location: NfcStudentAttendance)
+    fun insert(attendance: NfcStudentAttendance)
 
     @Query("SELECT * FROM nfc_student_attendance")
-    fun getAllLocation(): List<NfcStudentAttendance>
+    fun getAllAttendance(): List<NfcStudentAttendance>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(location: List<NfcStudentAttendance>?)
+    fun insertAll(attendance: List<NfcStudentAttendance>?)
 
     @Update
-    fun updateLocation(location: NfcStudentAttendance)
+    fun updateAttendance(attendance: NfcStudentAttendance)
 }

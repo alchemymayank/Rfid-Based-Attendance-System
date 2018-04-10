@@ -26,7 +26,7 @@ configure(allprojects){
     ext{
 
         arch_version = '1.0.0'
-//        lib_version = '27.0.2'
+        lib_version = '26.1.0'
 //
 //        /* Sample only */
 //        butterknifeVersion = '8.5.1'
