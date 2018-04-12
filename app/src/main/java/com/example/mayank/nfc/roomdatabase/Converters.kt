@@ -16,5 +16,6 @@ object Converters {
     @TypeConverter
     fun dateToTimestamp(date: Date): Long? {
         return (if (date == null) null else date.time)?.toLong()
+
     }
 }

@@ -24,9 +24,9 @@ class AttendanceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textViewFacultyName = itemView.findViewById<TextView>(R.id.text_view_faculty_name) as TextView
         val textViewTrackTime = itemView.findViewById<TextView>(R.id.text_view_track_time) as TextView
 
-        textViewStudentId.text = attendanceViewModel.nfcStudentId
-        textViewSubject.text = attendanceViewModel.subject
-        textViewFacultyName.text = attendanceViewModel.facultyName
+        textViewStudentId.text = "RFID : "+attendanceViewModel.nfcStudentId
+        textViewSubject.text = "Subjects : "+attendanceViewModel.subject
+        textViewFacultyName.text = "Faculty Name : "+attendanceViewModel.facultyName
         val date : Date? = Converters.fromTimestamp(attendanceViewModel.trackTime)
         val time =  getDateFormat(DISPLAY_DATE_FORMAT, date!!)
         textViewTrackTime.text = time
